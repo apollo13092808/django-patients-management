@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block btn-nav %}
+<a href="#" id="btn-nav" class="btn btn-outline-danger btn-sm border-light text-light" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+{% endblock btn-nav %}
+
+{% block time %}
+<div class="col-sm">
+<center>
+    <span id="clock" style="color: #89cff9;"></span>
+</center>
+</div>
+{% endblock time %}
+
+{% block nav-content %}
+<i class='bx bxs-user-plus' ></i> Add a patient
+{% endblock nav-content %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-body border-dark text-primary mt-3">
+                <span class="text-center"><strong>{% block card-title %}ADD PATIENT FORM{% endblock card-title %}</strong></span>
+            </div>
+            <form {% block Action %}action="/add-patient/"{% endblock Action %} autocomplete="off" method="post" enctype="multipart/form-data"
+                class="card p-3 border-dark mt-3">
+                {% csrf_token %}
+                <div class="input-group input-group-sm mb-3">
+                    <span class="btn border-secondary bg-light input-group-text">
+                        <i class='bx bx-user' ></i>
+                    </span>
+                    <input type="text" name="name" class="form-control" placeholder="Full Name" required {% block Value-name %}{% endblock Value-name %}>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="btn border-secondary bg-light input-group-text">
+                        <i class='bx bx-phone-call' ></i>
+                    </span>
+                    <input type="text" name="phone" class="form-control" placeholder="Phone Number" required {% block Value-phone %}{% endblock Value-phone %}>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="btn border-secondary bg-light input-group-text">
+                        <i class='bx bx-envelope' ></i>
+                    </span>
+                    <input type="email" name="email" class="form-control" placeholder="Email Address" required {% block Value-email %}{% endblock Value-email %}>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="btn border-secondary bg-light input-group-text">
+                        <i class='bx bx-question-mark'></i>
+                    </span>
+                    <input type="number" name="age" class="form-control" placeholder="Age" required {% block Value-age %}{% endblock Value-age %}>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <label for="gender" class="btn border-secondary bg-light input-group-text">
+                        <i class='bx bx-male-female'></i>
+                    </label>
+                    <select name="gender" id="gender" class="form-select" required>
+                        {% block Option %}
+                        <option value="" hidden>Select the Gender</option>
+                        {% endblock Option %}
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea name="note" class="form-control" rows="3"
+                        placeholder="Note (Optional)">{% block Note %}{% endblock Note %}</textarea>
+                </div>
+
+                <div class="d-grid gap-2 mt-2">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        {% block btn-submit %}Add{% endblock btn-submit %}
+                    </button>
+
+                    {% block btn-reset %}{% endblock btn-reset %}
+
+                    <a href="{% url 'backend' %}" class="btn btn-dark btn-sm">
+                        Cancel
+                    </a>
+                </div>
+
+                {% block ID-hidden %}{% endblock ID-hidden %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

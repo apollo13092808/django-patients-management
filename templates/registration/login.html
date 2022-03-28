@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block nav-content %}
+<i class='bx bx-usb'></i> LOGIN
+{% endblock nav-content %}
+
+{% block btn-nav %}
+<a href="{% url 'frontend' %}" id="btn-nav" class="btn btn-outline-primary btn-sm border-light text-light">Go Back</a>
+{% endblock btn-nav %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card p-3 border-dark">
+        <span class="btn btn-outline-dark mt-3">
+            <i class='bx bx-lock'></i> RESTRICTED ACCESS
+        </span>
+        <form action="" method="post" autocomplete="off" novalidate>
+            {% csrf_token %}
+            <div class="input-group mb-3 mt-5">
+                <span class="btn border-secondary bg-light input-group-text">
+                    <i class='bx bx-user'></i>
+                </span>
+                <input type="text" name="username" class="form-control" placeholder="Username">
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="btn border-secondary bg-light input-group-text">
+                    <i class='bx bx-lock-alt'></i>
+                </span>
+                <input type="password" name="password" class="form-control" placeholder="Password">
+            </div>
+
+            <input type="submit" id="btn-login" class="btn btn-primary btn-sm mt-4 mb-3" value="Login">
+        </form>
+    </div>
+
+    {% if form.errors %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        swal('Denied!', 'Invalid username or password.', 'error');
+    </script>
+    {% endif %}
+
+    <center id="heart">
+        <i class='blink_me text-primary bx bxs-heart'></i>
+    </center>
+</div>
+{% endblock content %}

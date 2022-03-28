@@ -1,0 +1,61 @@
+{% extends 'add.html' %}
+
+{% block nav-content %}
+<i class='bx bxs-edit'></i> {{ patient.name }}
+{% endblock nav-content %}
+
+{% block btn-nav %}
+<a href="#" id="btn-nav" class="btn btn-outline-danger btn-sm border-light text-light" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+{% endblock btn-nav %}
+
+{% block card-title %}
+EDIT PATIENT FORM
+<br>
+<span class="text-dark">This patient was registered on {{ patient.created | date:'Y-m-d' }} at {{ patient.created | date:'H:i' }}</span>
+{% endblock card-title %}
+
+{% block Action %}action="/edit-patient/"{% endblock Action %}
+
+{% block Value-name %}
+value="{{ patient.name }}"
+{% endblock Value-name %}
+
+{% block Value-phone %}
+value="{{ patient.phone }}"
+{% endblock Value-phone %}
+
+{% block Value-email %}
+value="{{ patient.email }}"
+{% endblock Value-email %}
+
+{% block Value-age %}
+value="{{ patient.age }}"
+{% endblock Value-age %}
+
+{% block Value-gender %}
+value="{{ patient.gender }}"
+{% endblock Value-gender %}
+
+{% block Option %}
+<option style="color: #007bff; background-color: #d3d3d3;" value="{{ patient.gender }}">
+    {% if patient.gender == 'M' %}
+    Male
+    {% else %}
+    Female
+    {% endif %}
+</option>
+{% endblock Option %}
+
+{% block Note %}{{ patient.note }}{% endblock Note %}
+
+{% block btn-submit %}Update{% endblock btn-submit %}
+
+{% block btn-reset %}
+<button type="reset" class="btn btn-secondary btn-sm">
+    Reset
+</button>
+{% endblock btn-reset %}
+
+{% block ID-hidden %}
+<input type="hidden" name="id" value="{{ patient.id }}">
+{% endblock ID-hidden %}

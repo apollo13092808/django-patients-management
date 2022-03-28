@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block nav-content %}
+<i class='bx bx-donate-heart'></i> Hospital Mananagment System
+{% endblock nav-content %}
+
+{% block time %}
+<div class="col-sm">
+    <center>
+        <span id="clock" style="color: #89cff9;"></span>
+    </center>
+</div>
+{% endblock time %}
+
+{% block btn-nav %}
+<a href="#" id="btn-nav" class="btn btn-outline-danger btn-sm border-light text-light" data-bs-toggle="modal"
+    data-bs-target="#logoutModal">Logout</a>
+{% endblock btn-nav %}
+
+{% block content %}
+<div class="container">
+    <br>
+    <br>
+    <!-- Add Patient Button -->
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'add_patient' %}" class="btn btn-outline-primary btn-sm">
+            <i class='bx bx-plus'></i> Add Patient
+        </a>
+        <span>
+            Welcome, <strong><span class="text-primary">{{ user.get_username }}</span></strong>
+        </span>
+    </div>
+
+    <!-- Search Box -->
+    <form action="" method="get">
+        <div class="input-group input-group-sm mb-3 mt-4">
+            <input type="text" name="q" class="form-control" placeholder="Search here..." value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-secondary">
+                <i class='bx bx-search'></i>
+            </button>
+            <a href="{% url 'backend' %}" class="btn btn-secondary" style="margin-left: 2px; font-size: 17px;">
+                <i class='bx bx-sync'></i>
+            </a>
+        </div>
+    </form>
+
+    <!-- Table -->
+    <center>
+        <table class="table table-hover table-bordered table-sm mt-4" style="font-size: 15px;">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th class="text-center">Age</th>
+                    <th class="text-center">Gender</th>
+                    <th class="text-center">Registered</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in patients %}
+                <tr id="check-id">
+                    <td class="align-middle">{{ p.name }}</td>
+                    <td class="align-middle">{{ p.phone }}</td>
+                    <td class="align-middle">{{ p.email }}</td>
+                    <td class="align-middle align-middle text-center">{{ p.age }}</td>
+                    <td class="align-middle text-center">{{ p.gender }}</td>
+                    <td class="align-middle text-center">{{ p.created | date:'Y-m-d H:i'}}</td>
+                    <td class="align-middle text-center">
+                        <a href="{% url 'patient' p.id %}" class="btn btn-outline-primary">
+                            <i class='bx bx-edit'></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-danger" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ p.id }}">
+                            <i class='bx bx-trash'></i>
+                        </a>
+                    </td>
+                </tr>
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal{{ p.id }}" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog-centered modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel">
+                                    <i class='bx bx-user-x'></i> Delete "{{ p.name }}"
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">Are you sure you want to delete this patient?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <a href="{% url 'delete_patient' p.id %}" class="btn btn-danger">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </center>
+
+    <!-- Pagination -->
+    <nav class="mt-4">
+        {% if patients.has_other_pages %}
+        <ul class="pagination justify-content-left">
+            {% if patients.has_previous %}
+            <a href="?page=1" class="btn btn-outline-primary mb-4"
+                style="width: 60px; border-radius: 3px; border: 1px solid #d3d3d3;">First
+            </a>
+
+            <li class="page-item">
+                <a href="?page={{ patients.previous_page_number }}" class="page-link">
+                    <i class='bx bx-chevrons-left'></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"></li>
+            {% endif %}
+
+            {% for i in patients.paginator.page_range %}
+            {% if patients.number == i %}
+            <li class="page-item active">
+                <span class="page-link">
+                    {{ i }}
+                    <span class="sr-only"></span>
+                </span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if patients.has_next %}
+            <li class="page-item">
+                <a href="?page={{ patients.next_page_number }}" class="page-link">
+                    <i class='bx bx-chevrons-right'></i>
+                </a>
+            </li>
+
+            <a href="?page={{ patients.paginator.num_pages }}" class="btn btn-outline-primary mb-4"
+                style="width: 60px; border-radius: 3px; border: 1px solid #d3d3d3; border-left: none;">Last
+            </a>
+            {% else %}
+            <li class="page-item disabled"></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </nav>
+
+    {% for msg in messages %}
+    {% if msg.tags == 'success' %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        let m = "{{ msg }}";
+        swal('Nice!', m, 'success');
+    </script>
+    {% endif %}
+    {% endfor %}
+</div>
+
+<span id="no-data" class="text-danger"></span>
+{% endblock content %}
